@@ -14,7 +14,7 @@ namespace EquationBalancer
 
         public static ICollection<ChemicalFormulaComponent> FormulaFromString(string chemicalFormula)
         {
-            var formula = new Collection<ChemicalFormulaComponent>();            
+            Collection<ChemicalFormulaComponent> formula = new Collection<ChemicalFormulaComponent>();
 
             if (!Regex.IsMatch(chemicalFormula, ElementValidation))
                 throw new FormatException("Formula not in correct format");
@@ -25,7 +25,7 @@ namespace EquationBalancer
                 int count =
                     match.Groups[2].Value != "" ? int.Parse(match.Groups[2].Value) : 1;
 
-                var elementName = new ChemicalElement(name);
+                ChemicalElement elementName = new ChemicalElement(name);
 
                 formula.Add(new ChemicalFormulaComponent
                 {
@@ -44,22 +44,11 @@ namespace EquationBalancer
 
             string[] leftAndRight = equation.Split("=>");
 
-            string[] leftHandSide = leftAndRight[0].Split("+");
+            List<string> lhs = leftAndRight[0].Split("+").ToList().ConvertAll(x => x.Trim());
 
-            for (var i = 0; i < leftHandSide.Length; i++)
-            {
-                leftHandSide[i] = leftHandSide[i].Trim();
-            }
+            List<string> rhs = leftAndRight[1].Split("+").ToList().ConvertAll(x => x.Trim());
 
-            string[] rightHandSide = leftAndRight[1].Split("+");
-
-            for (var i = 0; i < rightHandSide.Length; i++)
-            {
-                rightHandSide[i] = rightHandSide[i].Trim();
-            }
-
-
-            return (RHS: rightHandSide.ToList(), LHS: leftHandSide.ToList());
+            return (RHS: rhs, LHS: lhs);
 
         }
 
